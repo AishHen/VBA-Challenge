@@ -1,0 +1,112 @@
+
+Sub StockMarket():
+
+'Perform loop for each worksheet
+    
+Dim ws As Worksheet
+For Each ws In Worksheets
+
+    'Insert headers for additional Columns
+        ws.Cells(1, 9).Value = "Ticker"
+        ws.Cells(1, 10).Value = "Yearly Change"
+        ws.Cells(1, 11).Value = "Percent Change"
+        ws.Cells(1, 12).Value = "Total Stock Volume"
+        ws.Cells(1, 15).Value = "Ticker"
+        ws.Cells(1, 16).Value = "Value"
+    
+    'Insert names for additional cells
+        ws.Cells(2, 15).Value = "Greatest % Increase"
+        ws.Cells(3, 15).Value = "Greatest % Decrease"
+        ws.Cells(4, 15).Value = "Greatest Total Volume"
+
+
+    'Set Initial variables
+        Dim Ticker As String
+        Dim SummaryStockRow As Integer
+        SummaryStockRow = 2
+    
+    'Define Last Row
+        LastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+
+    'Set variable for yearly change
+        Dim OpeningValue As Double
+            OpeningValue = 0
+        Dim ClosingValue As Double
+            ClosingValue = 0
+        Dim YearlyChange As Double
+        Dim DateRow As Integer
+            
+    'Set variable for Percent change
+        Dim PercentChange As Double
+
+    'Set variable for total stock volume
+        Dim TotalStockVolume As Double
+
+    'Create loop for stocks
+        For i = 2 To 22771
+            If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+         
+                'Set the stock name
+                Ticker = ws.Cells(i, 1).Value
+                
+                'Print the stock name
+                ws.Range("I" & SummaryStockRow) = Ticker
+                
+                'Specify the opening stock value
+                OpeningValue = ws.Cells(i + 1, 3).Value
+                    
+                'Specify the closing stock value
+                ClosingValue = ws.Cells(i, 6).Value
+                
+                'Calculate Yearly Change
+                YearlyChange = (ClosingValue - OpeningValue)
+                    
+                'Print Yearly Change
+                ws.Range("J" & SummaryStockRow).Value = YearlyChange
+    
+                'Add to the Stock volume total
+                TotalStockVolume = TotalStockVolume + Cells(i, 7).Value
+        
+                'Print the total stock volume
+                ws.Range("L" & SummaryStockRow).Value = TotalStockVolume
+    
+                'Add to the StockRow
+                SummaryStockRow = SummaryStockRow + 1
+                
+                'Reset Total Stock Volume
+                TotalStockVolume = 0
+        
+                    
+            Else
+                'Add to the stock volume total
+                 TotalStockVolume = TotalStockVolume + ws.Cells(i, 7).Value
+                 
+            End If
+        Next i
+            LastTableRow = ws.Cells(Rows.Count, 10).End(xlUp).Row
+            
+            For i = 2 To LastTableRow
+            'Conditional Formatting
+            If ws.Cells(i, 10).Value >= 0 Then
+            
+            ws.Cells(i, 10).Interior.ColorIndex = 4
+            
+            Else
+                ws.Cells(i, 10).Interior.ColorIndex = 3
+                
+            End If
+                 
+        Next i
+        
+        
+        MsgBox (ws.Name)
+        
+        
+Next ws
+
+End Sub
+
+
+
+
+
